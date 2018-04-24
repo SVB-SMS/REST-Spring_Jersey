@@ -17,5 +17,7 @@ public interface MitchellService {
 	public void updateVehicleDetails(Vehicle vehicle);
 	
 	public void deleteVehicle(int id);
+	
+	public List<Vehicle> getVehiclesByMakeAndModel(String make, String model);
 
 }

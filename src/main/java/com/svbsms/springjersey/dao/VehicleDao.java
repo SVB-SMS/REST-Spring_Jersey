@@ -16,4 +16,6 @@ public interface VehicleDao {
 
 	public Vehicle deleteVehicle(Integer key);
 	
+	public List<Vehicle> getVehiclesByMakeAndModel(String make, String model);
+	
 }

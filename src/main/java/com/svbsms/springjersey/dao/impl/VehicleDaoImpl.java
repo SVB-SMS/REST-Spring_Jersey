@@ -65,4 +65,16 @@ public class VehicleDaoImpl implements VehicleDao {
 //		return null;
 	}
 
+	@Override
+	public List<Vehicle> getVehiclesByMakeAndModel(String make, String model) {
+		List<Vehicle> vehicles = new ArrayList<Vehicle>();
+		if(!vehiclesRepository.isEmpty()){
+			for(Integer ids : vehiclesRepository.keySet()){
+				if(vehiclesRepository.get(ids).getMake().equals(make) && vehiclesRepository.get(ids).getModel().equals(model))
+					vehicles.add(vehiclesRepository.get(ids));
+			}
+		}
+		return vehicles;
+	}
+
 }

@@ -12,6 +12,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
@@ -19,20 +20,18 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com.svbsms.springjersey.rest.model.Vehicle;
 import com.svbsms.springjersey.rest.service.MitchellService;
 
+@Component("vehicleResponse")
 @Path("/vehicles")
 public class VehicleResponse {
 //	private static final Logger LOGGER = LoggerFactory.getLogger(VehicleServiceImpl.class);
 	
 	@Autowired
 	private MitchellService mitchellService;
-	
-/*	public VehicleResponse(){
-		System.out.println("Constructor VehicleServiceImpl created");
-	}*/
 	
 	@GET
 	@Path("{id}")
@@ -49,23 +48,19 @@ public class VehicleResponse {
 		System.out.println("vehicle is not null entity: "+entity);
 		return Response.status(Response.Status.OK).entity(entity).build();
 	}
-	
-	/*@GET
-	@Path("{id}")
-	@Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-	@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-	public Vehicle getVehicle(@PathParam("id") int id) {
-		Vehicle vehicle = this.vehicleDAO.getVehicleByKey(id);
-		return vehicle;
-	}*/
 
 	@GET
 	@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-	public Response getVehicles() {
+	public Response getVehicles(@QueryParam("make") String make, @QueryParam("model") String model) {
 //		LOGGER.info("getVehicles called");
 		System.out.println("getVehicles called");
 		List<Vehicle> vehicles = new ArrayList<Vehicle>();
-		vehicles = this.mitchellService.getVehicles();
+		if(null != make && null != model){
+			vehicles = this.mitchellService.getVehiclesByMakeAndModel(make, model);
+		}
+		else{
+			vehicles = this.mitchellService.getVehicles();	
+		}		
 		System.out.println("getVehicles vehicles: "+vehicles);
 		if(vehicles.isEmpty())
 			return Response.status(Response.Status.NO_CONTENT).entity("There is no related data!").build();
@@ -73,18 +68,6 @@ public class VehicleResponse {
 		entity = new GenericEntity<List<Vehicle>>(vehicles){};
 		return Response.status(Response.Status.OK).entity(entity).build();
 	}
-/*	@GET
-	@Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-	@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-	public List<Vehicle> getVehicles() {
-		LOGGER.info("getVehicles called");
-		System.out.println("getVehicles called");
-		List<Vehicle> vehicles = new ArrayList<Vehicle>();
-		vehicles = this.vehicleDAO.getVehicles();
-		GenericEntity<List<Vehicle>> entity;
-		entity = new GenericEntity<List<Vehicle>>(vehicles){};
-		return vehicles;
-	}*/
 	
 	@POST
 	@Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })

@@ -39,5 +39,10 @@ public class MitchellServiceImpl implements MitchellService {
 		vehicleDao.deleteVehicle(id);
 	}
 
+	@Override
+	public List<Vehicle> getVehiclesByMakeAndModel(String make, String model) {
+		return vehicleDao.getVehiclesByMakeAndModel(make, model);
+	}
+
 
 }
